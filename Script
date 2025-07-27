@@ -1,0 +1,73 @@
+-- Karamujoo Hub - Custom UI Inspired by Siff/Ax Hub
+
+local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Rayfield/main/source"))()
+
+local Window = Rayfield:CreateWindow({
+	Name = "Karamujoo Hub",
+	LoadingTitle = "Loading...",
+	LoadingSubtitle = "Welcome to Karamujoo Hub",
+	ConfigurationSaving = {
+		Enabled = false,
+	},
+	KeySystem = false,
+})
+
+-- Tab: Main
+local MainTab = Window:CreateTab("Main", 4483362458)
+local MainSection = MainTab:CreateSection("Auto")
+
+local collecting = false
+local player = game.Players.LocalPlayer
+
+local function autoCollect()
+	while collecting do
+		local char = player.Character or player.CharacterAdded:Wait()
+		local hrp = char:WaitForChild("HumanoidRootPart")
+
+		for _, v in pairs(workspace.orbFolder.City:GetChildren()) do
+			if v:IsA("MeshPart") then
+				firetouchinterest(hrp, v, 0)
+				firetouchinterest(hrp, v, 1)
+			elseif v:IsA("Model") then
+				local gem = v:FindFirstChildWhichIsA("BasePart")
+				if gem then
+					firetouchinterest(hrp, gem, 0)
+					firetouchinterest(hrp, gem, 1)
+				end
+			end
+		end
+
+		task.wait(0.2)
+	end
+end
+
+MainTab:CreateToggle({
+	Name = "Auto Collect Orbs",
+	CurrentValue = false,
+	Flag = "AutoCollectToggle",
+	Callback = function(state)
+		collecting = state
+		if collecting then
+			spawn(autoCollect)
+		end
+	end,
+})
+
+-- Tab: Settings
+local SettingsTab = Window:CreateTab("Settings", 4483362458)
+SettingsTab:CreateSection("UI")
+
+SettingsTab:CreateButton({
+	Name = "Reload UI",
+	Callback = function()
+		Rayfield:Destroy()
+		loadstring(game:HttpGet("https://github.com/Gilmar-cpu/Speed-legends-script/new/main"))() -- Substitua pela URL do seu script se quiser recarregar
+	end,
+})
+
+SettingsTab:CreateButton({
+	Name = "Close UI",
+	Callback = function()
+		Rayfield:Destroy()
+	end,
+})
